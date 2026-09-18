@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { MotionConfig, motion } from "framer-motion";
-import { ArrowUpRight, Shirt, Check, QrCode, Plus } from "lucide-react";
+import { Check, QrCode, Plus } from "lucide-react";
 import { nextMachineStatus } from "@/lib/machine-view";
 import { MINUTE, statusOf } from "@/lib/laundry";
 import { advanceAlerts, watchMachine } from "@/lib/alerts";
@@ -12,6 +12,7 @@ import {
   type LaundryData,
 } from "@/lib/laundry-storage";
 import { loadRecord } from "@/lib/load-history";
+import { CubbyLoadCard } from "./cubby-load-card";
 import { CubbiesDialog } from "./cubbies-dialog";
 import { LoadHistory } from "./load-history";
 import { BottomNav, type Tab } from "@/components/ui/bottom-nav";
@@ -98,6 +99,9 @@ export function LaundryApp() {
     const timer = setTimeout(() => setToast(""), 4000);
     return () => clearTimeout(timer);
   }, [toast]);
+  const cubbyLoads = data.history.filter(
+    (record) => record.movedTo && record.collectedAt === undefined,
+  );
   const ownLoads = machines.filter((m) => m.owner === "you");
   const available = (kind: "washer" | "dryer") =>
     machines.filter((m) => m.kind === kind && m.endsAt === null).length;
@@ -255,6 +259,7 @@ export function LaundryApp() {
                     selected={selected}
                     onSelect={selectMachine}
                     onCubbies={() => setCubbiesOpen(true)}
+                    cubbyLoads={cubbyLoads}
                   />
                 ) : (
                   <div className="loading-room">Getting the room ready…</div>
@@ -282,32 +287,37 @@ export function LaundryApp() {
               <div className="page-intro">
                 <div className="eyebrow">SILLIMAN · ENTRYWAY M</div>
                 <h1>My loads</h1>
-                <p>A little less laundry to think about.</p>
+                <button
+                  className="primary-button do-laundry-button"
+                  disabled={!ready}
+                  onClick={() => setQuickStart(true)}
+                >
+                  <span>
+                    <Plus size={19} /> Do laundry
+                  </span>
+                  <QrCode size={21} />
+                </button>
               </div>
-              {ownLoads.length ? (
-                ownLoads.map((machine) => (
-                  <LoadSummaryCard
-                    key={machine.id}
-                    machine={machine}
-                    now={now}
-                    watching={watches.some((w) => w.machineId === machine.id)}
-                    onSelect={selectMachine}
-                    onToggleAlerts={toggleWatch}
-                  />
-                ))
-              ) : (
-                <div className="empty-state">
-                  <Shirt size={42} />
-                  <h2>A clean slate.</h2>
-                  <p>Find a machine to start your next load.</p>
-                  <button
-                    className="primary-button"
-                    onClick={() => setQuickStart(true)}
-                  >
-                    Do laundry <ArrowUpRight size={18} />
-                  </button>
-                </div>
-              )}
+              {cubbyLoads.map((record) => (
+                <CubbyLoadCard
+                  key={record.id}
+                  record={record}
+                  now={now}
+                  onOpen={() => setCubbiesOpen(true)}
+                />
+              ))}
+              {ownLoads.length
+                ? ownLoads.map((machine) => (
+                    <LoadSummaryCard
+                      key={machine.id}
+                      machine={machine}
+                      now={now}
+                      watching={watches.some((w) => w.machineId === machine.id)}
+                      onSelect={selectMachine}
+                      onToggleAlerts={toggleWatch}
+                    />
+                  ))
+                : null}
               <LoadHistory records={data.history} now={now} />
               <details className="demo-tools">
                 <summary>Try the prototype</summary>
@@ -345,56 +355,6 @@ export function LaundryApp() {
                   }}
                 >
                   Skip 5 minutes on all machines
-                </button>
-                <button
-                  disabled={!ownLoads.length}
-                  onClick={() => {
-                    const machine = ownLoads[0];
-                    if (!machine || machine.endsAt === null) return;
-                    const time = Date.now();
-                    const end = Math.min(machine.endsAt, time - 8 * MINUTE);
-                    setData((previous) => ({
-                      ...previous,
-                      machines: previous.machines.map((m) =>
-                        m.id === machine.id
-                          ? { ...m, owner: undefined, endsAt: null }
-                          : m,
-                      ),
-                      watches: previous.watches.filter(
-                        (w) => w.machineId !== machine.id,
-                      ),
-                      history: previous.history.map((r) =>
-                        r.machineId === machine.id &&
-                        r.endsAt === machine.endsAt
-                          ? {
-                              ...r,
-                              endsAt: end,
-                              startedAt:
-                                end -
-                                (machine.kind === "washer" ? 30 : 45) * MINUTE,
-                              movedTo: "Cubby B",
-                              movedAt: time,
-                            }
-                          : r,
-                      ),
-                      activity: [
-                        {
-                          id: crypto.randomUUID(),
-                          text: `Your laundry from ${machine.id} was moved to Cubby B.`,
-                          time,
-                          status: "move",
-                          machineId: machine.id,
-                          location: "Cubby B",
-                          recipient: "you",
-                          category: "loads",
-                        },
-                        ...previous.activity,
-                      ],
-                    }));
-                    setToast(`${machine.id} moved to Cubby B.`);
-                  }}
-                >
-                  Simulate my load moved to Cubby B
                 </button>
                 <button
                   onClick={() => {
@@ -446,6 +406,17 @@ export function LaundryApp() {
         />
         {cubbiesOpen && (
           <CubbiesDialog
+            records={data.history}
+            onCollect={(id) =>
+              setData((previous) => ({
+                ...previous,
+                history: previous.history.map((record) =>
+                  record.id === id
+                    ? { ...record, collectedAt: Date.now() }
+                    : record,
+                ),
+              }))
+            }
             activity={activity}
             now={now}
             onClose={() => setCubbiesOpen(false)}

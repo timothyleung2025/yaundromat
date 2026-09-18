@@ -345,11 +345,14 @@ test("availability fallback chooses the first nonempty tier for the requested ty
 import { loadRecord, restoreHistory, dayKey } from "./load-history";
 test("load history survives collection, repeat cycles and legacy storage", () => {
   const data = freshLaundry(now);
-  assert.equal(data.history.length, 2);
+  assert.equal(data.history.length, 3);
   const record = data.history[0];
   assert.equal(record.endsAt - record.startedAt, 30 * MINUTE);
   const collected = { ...record, collectedAt: record.endsAt + MINUTE };
   data.history = [collected];
+  data.machines = data.machines.map((m) =>
+    m.id === "D03" ? { ...m, owner: "neighbor" } : m,
+  );
   data.machines = data.machines.map((m) =>
     m.id === record.machineId ? { ...m, endsAt: null, owner: undefined } : m,
   );
@@ -370,7 +373,7 @@ test("load history survives collection, repeat cycles and legacy storage", () =>
   assert.equal(loadRecord({ ...next, owner: "neighbor" }), null);
   const legacy = JSON.parse(JSON.stringify(freshLaundry(now)));
   delete legacy.history;
-  assert.equal(restoreLaundry(JSON.stringify(legacy), now).history.length, 1);
+  assert.equal(restoreLaundry(JSON.stringify(legacy), now).history.length, 2);
 });
 test("invalid history is ignored without losing loads and calendar keys use local dates", () => {
   const data = freshLaundry(now);
@@ -382,12 +385,12 @@ test("invalid history is ignored without losing loads and calendar keys use loca
     restored.machines,
     JSON.parse(JSON.stringify(data.machines)),
   );
-  assert.equal(restored.history.length, 1);
+  assert.equal(restored.history.length, 2);
   const date = new Date(2026, 0, 2, 0, 5);
   assert.equal(dayKey(date.getTime()), "2026-01-02");
   assert.equal(
     restoreHistory([...data.history, ...data.history], data.machines).length,
-    2,
+    3,
   );
 });
 
@@ -443,5 +446,22 @@ test("fresh demo seeds unread cubby movement and a matching history entry", () =
       (event) => event.readAt === undefined,
     ).length,
     2,
+  );
+});
+
+test("reset demo includes your running washer, one-minute pickup dryer, and cubby load", () => {
+  const data = freshLaundry(now);
+  const washer = data.machines.find((m) => m.id === "W03")!;
+  const dryer = data.machines.find((m) => m.id === "D03")!;
+  assert.equal(washer.owner, "you");
+  assert.equal(statusOf(washer, now), "running");
+  assert.equal(dryer.owner, "you");
+  assert.equal(statusOf(dryer, now), "grace");
+  assert.equal(dryer.endsAt! + GRACE - now, MINUTE);
+  assert.equal(
+    data.history.filter(
+      (r) => r.movedTo === "Cubby B" && r.collectedAt === undefined,
+    ).length,
+    1,
   );
 });

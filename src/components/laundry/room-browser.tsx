@@ -10,6 +10,8 @@ import {
   Maximize2,
   Minimize2,
 } from "lucide-react";
+import type { LoadRecord } from "@/lib/load-history";
+import { CubbyLoadCard } from "./cubby-load-card";
 import type { Machine } from "@/types/laundry";
 import { statuses } from "@/lib/laundry";
 import {
@@ -31,6 +33,7 @@ export function RoomBrowser({
   selected,
   onSelect,
   onCubbies,
+  cubbyLoads,
   view,
   onView,
   preset = "all",
@@ -47,6 +50,7 @@ export function RoomBrowser({
   selected: string | null;
   onSelect: (id: string) => void;
   onCubbies: () => void;
+  cubbyLoads: LoadRecord[];
   view: RoomView;
   onView: (view: RoomView) => void;
 }) {
@@ -286,6 +290,7 @@ export function RoomBrowser({
               selected={selected}
               onSelect={onSelect}
               onCubbies={onCubbies}
+              ownedCubbies={cubbyLoads.map((record) => record.movedTo!)}
             />
             {!results.length && (
               <div className="list-empty">
@@ -297,14 +302,29 @@ export function RoomBrowser({
             )}
           </>
         ) : (
-          <MachineList
-            selected={selected}
-            ranked
-            machines={results}
-            now={now}
-            onSelect={onSelect}
-            onClear={() => setFilters(emptyFilters)}
-          />
+          <>
+            {cubbyLoads
+              .filter(
+                (record) =>
+                  filters.kind === "all" || record.kind === filters.kind,
+              )
+              .map((record) => (
+                <CubbyLoadCard
+                  key={record.id}
+                  record={record}
+                  now={now}
+                  onOpen={onCubbies}
+                />
+              ))}
+            <MachineList
+              selected={selected}
+              ranked
+              machines={results}
+              now={now}
+              onSelect={onSelect}
+              onClear={() => setFilters(emptyFilters)}
+            />
+          </>
         )}
       </motion.div>
       {options && (

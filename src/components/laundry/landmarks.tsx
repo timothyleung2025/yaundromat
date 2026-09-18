@@ -7,20 +7,38 @@ export function FoldingTable() {
     </div>
   );
 }
-export function Cubbies({ onClick }: { onClick: () => void }) {
+export function Cubbies({
+  onClick,
+  ownedCubbies,
+}: {
+  onClick: () => void;
+  ownedCubbies: string[];
+}) {
   return (
     <button
       className="landmark-cubbies"
       onClick={onClick}
       aria-label="View cubbies"
+      aria-description={
+        ownedCubbies.length
+          ? `Your laundry is in ${Array.from(new Set(ownedCubbies)).join(", ")}`
+          : undefined
+      }
       aria-haspopup="dialog"
     >
       <Box size={21} strokeWidth={1.5} />
       <span>Cubbies</span>
       <span className="cubby-letters" aria-label="Cubbies A, B and C">
-        <i>A</i>
-        <i>B</i>
-        <i>C</i>
+        {["A", "B", "C"].map((letter) => (
+          <i
+            key={letter}
+            className={
+              ownedCubbies.includes(`Cubby ${letter}`) ? "has-your-load" : ""
+            }
+          >
+            {letter}
+          </i>
+        ))}
       </span>
     </button>
   );

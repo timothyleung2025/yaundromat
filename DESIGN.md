@@ -32,7 +32,7 @@ The third tab is **Alerts**, split into **Your loads** and **Other machines**. S
 
 My loads includes a History disclosure, collapsed by default, with persisted history in list and local-date calendar views, plus completed-load totals, wash/dry counts and cycle hours. Records capture tracked starts, scheduled finishes and collection times; legacy saves retain their loads and seed history from currently owned cycles. An active bell means alerts are on; a crossed bell means they are off.
 
-The My loads page keeps prototype controls in a collapsed disclosure. Fresh/reset demos include two unread alerts and a completed W05 load moved to Cubby B. Simulate my load moved to Cubby B finishes and moves a current owned load, frees its machine, records its destination in history and cubbies, and adds an unread notification. Skipping five minutes advances all machine and watch timestamps together so both own-load and watched-machine alerts can be explored.
+The My loads page keeps prototype controls in a collapsed disclosure. Fresh/reset demos include your running washer W03, your dryer D03 with one minute left in Pickup Window, a completed W05 load moved to Cubby B, and two unread alerts. My loads has the same Do laundry quick-start action as Home. The moved demo load is seeded directly by Reset demo. Uncollected cubby loads remain visible as Cubby B cards in My loads and the room list. Their cubby letters and popup sections are highlighted until I picked it up records collection; the active card and highlight then disappear, while history persists. Skipping five minutes advances all machine and watch timestamps together so both own-load and watched-machine alerts can be explored.
 
 ## Phone PWA
 

@@ -9,6 +9,7 @@ export function RoomMap({
   selected,
   onSelect,
   onCubbies,
+  ownedCubbies,
 }: {
   machines: Machine[];
   matchingIds?: string[];
@@ -16,6 +17,7 @@ export function RoomMap({
   selected: string | null;
   onSelect: (id: string) => void;
   onCubbies: () => void;
+  ownedCubbies: string[];
 }) {
   return (
     <section className="room-overview" aria-label="Laundry room floor plan">
@@ -24,7 +26,7 @@ export function RoomMap({
         <div className="room-wall wall-left" aria-hidden="true" />
         <div className="room-wall wall-right" aria-hidden="true" />
         <Plant />
-        <Cubbies onClick={onCubbies} />
+        <Cubbies onClick={onCubbies} ownedCubbies={ownedCubbies} />
         <div className="silliman-machines">
           {roomSlots.map((slot) => {
             const machine = machines.find((m) => m.id === slot.id);

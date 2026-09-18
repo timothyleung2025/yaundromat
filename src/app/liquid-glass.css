@@ -2079,3 +2079,76 @@ body {
   color: #6e350d;
   filter: drop-shadow(0 0 1px #fff7eb) drop-shadow(0 0 1px #fff7eb);
 }
+
+.cubby-load-card {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  padding: 18px;
+  color: var(--ink);
+}
+.cubby-load-card .load-summary-copy {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+.cubby-load-card .load-summary-copy strong {
+  font-size: 15px;
+  line-height: 1.3;
+}
+.cubby-load-card .load-summary-copy small {
+  display: grid;
+  gap: 3px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.cubby-load-card > svg {
+  flex-shrink: 0;
+}
+.cubby-load-card {
+  padding: 20px 18px;
+  gap: 15px;
+}
+.cubby-load-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: #d5ecfc;
+  color: #286a9c;
+}
+.landmark-cubbies .cubby-letters .has-your-load {
+  background: #2877b4;
+  color: #fff;
+  box-shadow: 0 0 0 2px #d3ecff;
+}
+.cubby-contents section.has-your-load {
+  border: 2px solid #408ac0;
+  background: #e4f3ffb3;
+}
+.cubby-yours-label {
+  display: block;
+  color: #286a9c !important;
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.cubby-pickup {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.cubby-pickup .primary-button {
+  margin-top: 5px;
+  min-height: 44px;
+  font-size: 12px;
+}
+.cubby-log-label {
+  margin-top: 12px !important;
+}

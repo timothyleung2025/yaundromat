@@ -12,7 +12,11 @@ export type LaundryData = {
   history: LoadRecord[];
 };
 export function freshLaundry(now: number): LaundryData {
-  const machines = makeMachines(now);
+  const machines = makeMachines(now).map((machine) =>
+    machine.id === "D03"
+      ? { ...machine, owner: "you" as const, endsAt: now - 4 * MINUTE }
+      : machine,
+  );
   return {
     machines,
     activity: [
@@ -28,16 +32,16 @@ export function freshLaundry(now: number): LaundryData {
       },
       {
         id: `demo-ready-D03-${now}`,
-        text: "D03 has finished. Waiting for pickup.",
-        time: now - 15000,
+        text: "Your load in D03 is ready to collect.",
+        time: now - 4 * MINUTE,
         status: "grace",
         machineId: "D03",
         recipient: "you",
-        category: "watching",
+        category: "loads",
       },
     ],
     watches: machines
-      .filter((m) => m.owner === "you" || m.id === "D03")
+      .filter((m) => m.owner === "you")
       .map((m) => watchMachine(m, now)),
     lastRead: 0,
     history: [
