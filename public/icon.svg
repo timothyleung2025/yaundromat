@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="paper" x1="44" y1="0" x2="466" y2="512" gradientUnits="userSpaceOnUse"><stop stop-color="#fffdf6"/><stop offset="1" stop-color="#e6f3ff"/></linearGradient>
+    <linearGradient id="ink" x1="144" y1="108" x2="384" y2="406" gradientUnits="userSpaceOnUse"><stop stop-color="#154c91"/><stop offset="1" stop-color="#0a3470"/></linearGradient>
+    <linearGradient id="water" x1="200" y1="225" x2="322" y2="390" gradientUnits="userSpaceOnUse"><stop stop-color="#92ddff"/><stop offset="1" stop-color="#48a9e5"/></linearGradient>
+    <linearGradient id="water-left" x1="180" y1="250" x2="256" y2="380" gradientUnits="userSpaceOnUse"><stop stop-color="#86d4f8"/><stop offset="1" stop-color="#54b4e9"/></linearGradient>
+    <linearGradient id="water-right" x1="320" y1="245" x2="256" y2="380" gradientUnits="userSpaceOnUse"><stop stop-color="#6cc5f3"/><stop offset="1" stop-color="#3499d8"/></linearGradient>
+    <clipPath id="drum"><circle cx="256" cy="293" r="84"/></clipPath>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#paper)"/>
+  <rect x="18" y="18" width="476" height="476" rx="96" stroke="white" stroke-width="4"/>
+  <g id="washer">
+    <rect x="115" y="99" width="282" height="318" rx="35" fill="white" fill-opacity=".8" stroke="url(#ink)" stroke-width="18"/>
+    <path d="M151 142h38" stroke="url(#ink)" stroke-width="17" stroke-linecap="round"/>
+    <circle cx="355" cy="142" r="15" fill="url(#ink)"/>
+    <circle cx="256" cy="293" r="101" fill="white" stroke="url(#ink)" stroke-width="14"/>
+    <circle cx="256" cy="293" r="84" fill="url(#ink)"/>
+    <g clip-path="url(#drum)">
+      <path d="M160 220L256 305V395H160Z" fill="url(#water-left)"/>
+      <path d="M352 220L256 305V395H352Z" fill="url(#water-right)"/>
+      <path d="M184 231C210 255 236 275 256 305C276 275 302 255 328 231M256 305V390" stroke="white" stroke-width="23" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <circle cx="275" cy="242" r="9" fill="white"/>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+/* Brand foundations stay separate from lifecycle semantics. */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --shadow-soft: 0 4px 14px #1e39660a;
+  --shadow-raised: 0 8px 24px #1e396618;
+  --duration-press: 160ms;
+  --duration-enter: 280ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-caption: 12px;
+  --text-body: 14px;
+  --text-title: 16px;
+  --available-surface: #deedcb;
+  --available-accent: #3b6846;
+  --running-surface: #d9edf8;
+  --running-accent: #2e69ab;
+  --grace-surface: #ffead5;
+  --grace-accent: #c56b20;
+  --move-surface: #d3ecdf;
+  --move-accent: #28695c;
+}
+.state-available {
+  --machine: var(--available-surface);
+  --status-ink: var(--available-accent);
+  --machine-border: color-mix(
+    in srgb,
+    var(--available-accent) 38%,
+    var(--available-surface)
+  );
+}
+.state-running {
+  --machine: var(--running-surface);
+  --status-ink: var(--running-accent);
+  --machine-border: color-mix(
+    in srgb,
+    var(--running-accent) 38%,
+    var(--running-surface)
+  );
+}
+.state-grace {
+  --machine: var(--grace-surface);
+  --status-ink: var(--grace-accent);
+  --machine-border: color-mix(
+    in srgb,
+    var(--grace-accent) 38%,
+    var(--grace-surface)
+  );
+}
+.state-move {
+  --machine: var(--move-surface);
+  --status-ink: var(--move-accent);
+  --machine-border: color-mix(
+    in srgb,
+    var(--move-accent) 38%,
+    var(--move-surface)
+  );
+}
