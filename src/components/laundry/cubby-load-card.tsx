@@ -1,3 +1,4 @@
+import { OwnershipOutline } from "./ownership-outline";
 import { Box, ChevronRight } from "lucide-react";
 import type { LoadRecord } from "@/lib/load-history";
 import { clock } from "@/lib/laundry";
@@ -31,6 +32,7 @@ export function CubbyLoadCard({
         </small>
       </span>
       <ChevronRight size={18} />
+      <OwnershipOutline radius={22} />
     </button>
   );
 }

@@ -465,3 +465,42 @@ test("reset demo includes your running washer, one-minute pickup dryer, and cubb
     1,
   );
 });
+
+import { scenarioLaundry } from "./scenarios";
+test("all four scenarios meet their occupancy and ownership promises", () => {
+  const first = scenarioLaundry(1, now);
+  assert.ok(first.machines.every((m) => statusOf(m, now) !== "running"));
+  assert.ok(first.machines.some((m) => m.endsAt === null));
+  assert.equal(first.machines.filter((m) => m.owner === "you").length, 0);
+  assert.equal(first.history.length, 0);
+  const second = scenarioLaundry(2, now);
+  assert.equal(second.machines.filter((m) => m.owner === "you").length, 0);
+  assert.equal(second.history.length, 0);
+  assert.ok(second.watches.every((w) => w.category === "watching"));
+  assert.ok(
+    second.machines.every((m) =>
+      ["grace", "running"].includes(statusOf(m, now)),
+    ),
+  );
+  const shortWindow = second.machines.find((m) => m.id === "W04")!;
+  assert.equal(shortWindow.endsAt! + GRACE - now, 15000);
+  assert.equal(statusOf(shortWindow, now + 15000), "move");
+  assert.ok(
+    scenarioLaundry(3, now).machines.some(
+      (m) => m.owner === "you" && statusOf(m, now) === "grace",
+    ),
+  );
+  const fourth = scenarioLaundry(4, now);
+  assert.ok(
+    fourth.history.some(
+      (r) => r.movedTo === "Cubby B" && r.collectedAt === undefined,
+    ),
+  );
+  for (const scenario of [1, 2, 3, 4] as const) {
+    const data = scenarioLaundry(scenario, now);
+    assert.deepEqual(
+      restoreLaundry(JSON.stringify(data), now),
+      JSON.parse(JSON.stringify(data)),
+    );
+  }
+});

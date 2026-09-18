@@ -2081,6 +2081,8 @@ body {
 }
 
 .cubby-load-card {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 13px;
@@ -2151,4 +2153,51 @@ body {
 }
 .cubby-log-label {
   margin-top: 12px !important;
+}
+
+.scenario-options {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+.demo-tools .scenario-options button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  text-align: left;
+  padding: 14px 12px;
+  border-radius: 17px;
+  background: #ffffffb3;
+  border: 1px solid #fff;
+  color: var(--ink);
+}
+.demo-tools .scenario-options button[aria-pressed="true"] {
+  border-color: #68a2ce;
+  background: #e1f1fccc;
+}
+.scenario-number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: #d9ecf9;
+  color: #2d6793;
+  font-size: 12px;
+}
+.scenario-options strong,
+.scenario-options small {
+  display: block;
+}
+.scenario-options strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.scenario-options small {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 4px;
 }

@@ -11,6 +11,7 @@ import {
   STORAGE,
   type LaundryData,
 } from "@/lib/laundry-storage";
+import { scenarios, scenarioLaundry } from "@/lib/scenarios";
 import { loadRecord } from "@/lib/load-history";
 import { CubbyLoadCard } from "./cubby-load-card";
 import { CubbiesDialog } from "./cubbies-dialog";
@@ -321,50 +322,38 @@ export function LaundryApp() {
               <LoadHistory records={data.history} now={now} />
               <details className="demo-tools">
                 <summary>Try the prototype</summary>
-                <p>Simulated timers and in-app alerts.</p>
-                <button
-                  onClick={() => {
-                    setData((previous) => ({
-                      ...previous,
-                      machines: previous.machines.map((m) =>
-                        m.endsAt === null
-                          ? m
-                          : { ...m, endsAt: m.endsAt - 5 * MINUTE },
-                      ),
-                      history: previous.history.map((record) =>
-                        previous.machines.some(
-                          (m) =>
-                            m.owner === "you" &&
-                            m.id === record.machineId &&
-                            m.endsAt === record.endsAt,
-                        )
-                          ? {
-                              ...record,
-                              startedAt: record.startedAt - 5 * MINUTE,
-                              endsAt: record.endsAt - 5 * MINUTE,
-                            }
-                          : record,
-                      ),
-                      watches: previous.watches.map((w) => ({
-                        ...w,
-                        cycleEnd:
-                          w.cycleEnd === null ? null : w.cycleEnd - 5 * MINUTE,
-                      })),
-                    }));
-                    setNow(Date.now());
-                  }}
-                >
-                  Skip 5 minutes on all machines
-                </button>
-                <button
-                  onClick={() => {
-                    setData(freshLaundry(Date.now()));
-                    setNow(Date.now());
-                    setToast("Demo reset.");
-                  }}
-                >
-                  Reset demo
-                </button>
+                <p>
+                  Choose a scenario to reset the room, your loads, and alerts.
+                </p>
+                <div className="scenario-options">
+                  {scenarios.map((scenario) => (
+                    <button
+                      key={scenario.id}
+                      aria-pressed={data.scenario === scenario.id}
+                      onClick={() => {
+                        const time = Date.now();
+                        setData(scenarioLaundry(scenario.id, time));
+                        setNow(time);
+                        setSelected(null);
+                        setQuickStart(false);
+                        setCubbiesOpen(false);
+                        setRoomExpanded(false);
+                        setRoomView("map");
+                        setBrowse((previous) => ({
+                          preset: "all",
+                          kind: "all",
+                          key: previous.key + 1,
+                        }));
+                        setToast(`Scenario ${scenario.id} loaded.`);
+                      }}
+                    >
+                      <span className="scenario-number">{scenario.id}</span>
+                      <span>
+                        <strong>{scenario.name}</strong>
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </details>
             </>
           )}

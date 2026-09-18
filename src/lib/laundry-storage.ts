@@ -5,6 +5,7 @@ import { roomSlots } from "./silliman";
 import { restoreHistory, type LoadRecord } from "./load-history";
 export const STORAGE = "yaundromat-silliman-v2";
 export type LaundryData = {
+  scenario?: 1 | 2 | 3 | 4;
   machines: Machine[];
   activity: Activity[];
   watches: MachineWatch[];
